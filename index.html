@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🎭 产品梦剧场：重生我在张江做 AI 产品</title>
+    <title>🎭 产品梦剧场：重生文科女制霸AI产品赛道</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         /* --- Global Reset & Fonts --- */
@@ -16,6 +16,8 @@
             overflow: hidden;
             background-color: var(--color-bg-main);
             -webkit-font-smoothing: antialiased;
+            height: var(--full-height);
+            min-height: var(--full-height);
         }
 
         /* --- Utility Classes (Y2K/New Jeans Style) --- */
@@ -28,6 +30,26 @@
             --color-light: #FFFFFF;
             --color-bg-main: #F7F7F7;
             --color-bg-intro: #45A29E; /* 与 Intro 融合 */
+            --full-height: 100vh;
+            --safe-area-top: 0px;
+            --safe-area-bottom: 0px;
+            --safe-area-left: 0px;
+            --safe-area-right: 0px;
+        }
+
+        @supports (height: 100dvh) {
+            :root {
+                --full-height: 100dvh;
+            }
+        }
+
+        @supports (padding: env(safe-area-inset-top)) {
+            :root {
+                --safe-area-top: env(safe-area-inset-top);
+                --safe-area-bottom: env(safe-area-inset-bottom);
+                --safe-area-left: env(safe-area-inset-left);
+                --safe-area-right: env(safe-area-inset-right);
+            }
         }
 
         .pixel-font {
@@ -39,25 +61,87 @@
 
         /* --- View Containers (SPA Structure) --- */
         #shelfView, #detailView {
-            width: 100vw; height: 100vh;
+            width: 100vw;
+            height: var(--full-height);
+            min-height: var(--full-height);
             position: absolute; top: 0; left: 0;
             transition: opacity 0.5s ease, transform 0.5s ease;
         }
-        #shelfView { background: linear-gradient(135deg, var(--color-accent2), var(--color-bg-intro)); }
+        #shelfView { background: linear-gradient(135deg, var(--color-accent2) 0%, var(--color-bg-intro) 50%, var(--color-accent3) 100%); }
         #shelfView.hidden { opacity: 0; pointer-events: none; transform: scale(1.06); }
         #detailView { opacity: 0; pointer-events: none; transform: translateY(50px); z-index: 50; }
         #detailView.active { opacity: 1; pointer-events: auto; transform: translateY(0); }
 
         /* --- Shelf View Styles --- */
-        .shelf-header { padding: 50px 20px 10px; text-align: center; color: var(--color-dark); }
-        .shelf-header h1 { font-size: 26px; font-weight: 900; text-shadow: 3px 3px 0 var(--color-light); }
-        .shelf-header p { font-size: 12px; margin-top: 8px; }
+        .shelf-header { padding: calc(50px + var(--safe-area-top)) 20px 10px; text-align: center; color: var(--color-dark); }
+        .shelf-header h1 {
+            font-size: 34px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-shadow: 4px 4px 0 var(--color-accent1),
+                         6px 6px 0 rgba(0, 0, 0, 0.3);
+            animation: titlePulse 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes titlePulse {
+            from { text-shadow: 4px 4px 0 var(--color-accent1), 6px 6px 0 rgba(0, 0, 0, 0.3); }
+            to { text-shadow: 4px 4px 0 var(--color-accent4), 6px 6px 0 rgba(0, 0, 0, 0.3); }
+        }
+        .shelf-tagline {
+            font-size: 16px;
+            margin-top: 20px;
+            line-height: 1.8;
+            max-width: min(500px, 90vw);
+            margin-left: auto;
+            margin-right: auto;
+            color: var(--color-dark);
+            font-weight: 700;
+            text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.9),
+                         3px 3px 0 rgba(255, 255, 255, 0.5);
+        }
+
+        .highlight-text {
+            font-weight: 900;
+            font-size: 1.15em;
+            color: var(--color-accent1);
+            text-shadow: 2px 2px 0 var(--color-dark);
+            display: inline-block;
+            animation: highlightPulse 2s ease-in-out infinite alternate;
+            letter-spacing: 0.5px;
+        }
+
+        @keyframes highlightPulse {
+            0% {
+                color: var(--color-accent1);
+                text-shadow: 2px 2px 0 var(--color-dark);
+            }
+            100% {
+                color: var(--color-accent4);
+                text-shadow: 2px 2px 0 var(--color-dark),
+                             0 0 10px var(--color-accent4);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .shelf-header h1 {
+                font-size: 28px;
+                text-shadow: 3px 3px 0 var(--color-accent1),
+                             5px 5px 0 rgba(0, 0, 0, 0.3);
+            }
+            .shelf-tagline {
+                font-size: 14px;
+            }
+            .highlight-text {
+                font-size: 1.1em;
+            }
+        }
         .carousel-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 75vh;
-            padding: 40px 20px;
+            min-height: 320px;
+            height: calc(var(--full-height) - 160px);
+            padding: 40px calc(20px + var(--safe-area-right)) calc(60px + var(--safe-area-bottom)) calc(20px + var(--safe-area-left));
             position: relative;
             overflow: hidden;
         }
@@ -71,24 +155,26 @@
 
         @media (max-width: 768px) {
             .carousel-wrapper {
-                gap: 40px;
+                gap: 100vw;
                 width: 100%;
-                padding: 0 calc((100vw - min(300px, 80vw)) / 2);
+                padding: 0 calc((100vw - 65vw) / 2);
             }
 
             .carousel-container {
-                padding: 40px 0;
+                padding: 32px 0 calc(150px + var(--safe-area-bottom)) 0;
                 overflow: hidden;
+                height: auto;
+                min-height: calc(var(--full-height) - 200px);
             }
 
             .book-card {
-                width: min(300px, 80vw);
-                min-width: min(300px, 80vw);
+                width: 65vw;
+                min-width: 65vw;
                 flex-shrink: 0;
             }
 
             .book-cover {
-                height: min(300px, 80vw);
+                height: 65vw;
             }
 
             .carousel-arrow {
@@ -98,7 +184,7 @@
 
         .carousel-nav {
             position: absolute;
-            bottom: 40px;
+            bottom: 85px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
@@ -107,42 +193,62 @@
         }
 
         .carousel-dot {
-            width: 10px;
-            height: 10px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
-            background: rgba(31, 40, 51, 0.3);
-            border: 2px solid var(--color-dark);
+            background: white;
+            border: 3px solid var(--color-dark);
             cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.6);
+        }
+
+        .carousel-dot:hover {
+            transform: scale(1.2);
+            background: var(--color-accent2);
         }
 
         .carousel-dot.active {
             background: var(--color-accent1);
-            transform: scale(1.3);
+            transform: scale(1.4);
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.8);
+            animation: dotPulse 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes dotPulse {
+            from { background: var(--color-accent1); }
+            to { background: var(--color-accent4); }
         }
 
         .carousel-arrow {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 50px;
-            height: 50px;
+            width: 56px;
+            height: 56px;
             background: white;
-            border: 3px solid var(--color-dark);
+            border: 4px solid var(--color-dark);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 24px;
+            font-size: 28px;
+            font-weight: bold;
             z-index: 10;
-            box-shadow: 4px 4px 0 rgba(0,0,0,0.8);
-            transition: all 0.3s ease;
+            box-shadow: 6px 6px 0 rgba(0,0,0,0.9);
+            transition: all 0.2s ease;
         }
 
         .carousel-arrow:hover {
             background: var(--color-accent2);
-            transform: translateY(-50%) scale(1.1);
+            transform: translateY(-50%) scale(1.15) rotate(5deg);
+            box-shadow: 8px 8px 0 var(--color-accent1);
+        }
+
+        .carousel-arrow:active {
+            transform: translateY(-50%) scale(1.05);
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.9);
         }
 
         .carousel-arrow.left {
@@ -155,18 +261,20 @@
         .book-card {
             width: 320px;
             background-color: white;
-            border: 3px solid var(--color-dark);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            border: 4px solid var(--color-dark);
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.8),
+                        0 4px 20px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.3s ease;
             cursor: pointer;
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            border-radius: 16px;
+            border-radius: 20px;
         }
         .book-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+            transform: translateY(-8px) rotate(-1deg);
+            box-shadow: 12px 12px 0 var(--color-accent1),
+                        0 8px 30px rgba(0, 0, 0, 0.3);
         }
         .book-cover {
             width: 100%;
@@ -217,17 +325,21 @@
 
         /* --- Detail View / Slides --- */
         .progress-container {
-            position: fixed; top: 10px; left: 15px; right: 15px; z-index: 100;
+            position: fixed; top: calc(10px + var(--safe-area-top)); left: calc(15px + var(--safe-area-left)); right: calc(15px + var(--safe-area-right)); z-index: 100;
             background-color: rgba(255, 255, 255, 0.92); padding: 8px; border: 3px solid var(--color-dark);
             box-shadow: 3px 3px 0px var(--color-dark);
         }
         .progress-bar { height: 10px; background-color: var(--color-accent1); width: 0%; transition: width 0.5s ease; }
 
-        .swiper-container { width: 100vw; height: 100vh; position: relative; }
+        .swiper-container { width: 100vw; height: var(--full-height); position: relative; }
 
         .slide {
-            width: 100%; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
-            padding: 80px 20px 40px; position: absolute; top: 0; left: 0;
+            width: 100%;
+            height: var(--full-height);
+            min-height: var(--full-height);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding: calc(80px + var(--safe-area-top)) 20px calc(40px + var(--safe-area-bottom));
+            position: absolute; top: 0; left: 0;
             transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.5s;
             opacity: 0; transform: translateY(100%);
             background-color: var(--color-bg-main);
@@ -299,7 +411,7 @@
 
         /* Progress helpers */
         .swipe-indicator {
-            position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%);
+            position: absolute; bottom: calc(15px + var(--safe-area-bottom)); left: 50%; transform: translateX(-50%);
             font-size: 20px; z-index: 20; color: #777;
         }
         .slide-intro .swipe-indicator, .slide-outro .swipe-indicator {
@@ -309,6 +421,7 @@
             color: var(--color-dark);
             font-size: 14px;
             font-weight: bold;
+            bottom: calc(30px + var(--safe-area-bottom));
             animation: pulse 2s infinite;
         }
         .vertical-swipe { animation: bounce-v 1.5s infinite; }
@@ -343,71 +456,235 @@
             display: none;
         }
 
-        /* 音乐控制按钮样式 */
-        .music-control {
+        /* 书单按钮样式 */
+        .book-list-button {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, var(--color-accent2), var(--color-accent3));
-            border: 3px solid var(--color-dark);
+            bottom: calc(30px + var(--safe-area-bottom));
+            right: calc(20px + var(--safe-area-right));
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--color-accent1), var(--color-accent3));
+            border: 4px solid var(--color-dark);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             z-index: 1000;
-            box-shadow: 4px 4px 0 rgba(0,0,0,0.8);
+            box-shadow: 5px 5px 0 rgba(0,0,0,0.9);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .music-control:hover {
-            transform: scale(1.1);
-            box-shadow: 6px 6px 0 rgba(0,0,0,0.9);
+        .book-list-button:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 7px 7px 0 var(--color-accent4);
         }
 
-        .music-control.playing {
-            animation: rotate 3s linear infinite;
+        .book-list-button:active {
+            transform: scale(1.05);
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.9);
         }
 
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        .book-list-icon {
+            font-size: 28px;
+            animation: bookFloat 2s ease-in-out infinite alternate;
         }
 
-        .music-icon {
-            font-size: 24px;
-            color: var(--color-light);
-            text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+        @keyframes bookFloat {
+            from { transform: translateY(0px); }
+            to { transform: translateY(-3px); }
         }
 
-        /* 音量滑块 */
-        .volume-slider {
+        /* 书单弹窗样式 */
+        .book-list-overlay {
             position: fixed;
-            bottom: 90px;
-            right: 20px;
-            width: 70px;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: var(--full-height);
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
             opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-            background: white;
-            padding: 10px;
-            border: 2px solid var(--color-dark);
-            border-radius: 8px;
-            box-shadow: 4px 4px 0 rgba(0,0,0,0.8);
-            z-index: 999;
+            transition: opacity 0.3s ease;
         }
 
-        .music-control:hover + .volume-slider,
-        .volume-slider:hover {
+        .book-list-overlay.active {
+            display: flex;
             opacity: 1;
-            visibility: visible;
         }
 
-        .volume-slider input {
-            width: 100%;
+        .book-list-modal {
+            background: white;
+            border: 4px solid var(--color-dark);
+            border-radius: 20px;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.9);
+            width: 90vw;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow: hidden;
+            animation: modalSlideIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px) scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .book-list-header {
+            background: linear-gradient(135deg, var(--color-accent1), var(--color-accent3));
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid var(--color-dark);
+        }
+
+        .book-list-header h2 {
+            font-size: 22px;
+            font-weight: 900;
+            color: white;
+            text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3);
+            margin: 0;
+        }
+
+        .book-list-close {
+            width: 36px;
+            height: 36px;
+            background: white;
+            border: 3px solid var(--color-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
+            font-size: 24px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.8);
+        }
+
+        .book-list-close:hover {
+            background: var(--color-accent2);
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        .book-list-content {
+            padding: 30px 25px;
+            overflow-y: auto;
+            max-height: calc(80vh - 100px);
+        }
+
+        .book-item {
+            background: linear-gradient(135deg, rgba(255, 107, 129, 0.1), rgba(168, 113, 248, 0.1));
+            border: 3px solid var(--color-dark);
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.8);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .book-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 6px 6px 0 var(--color-accent1);
+        }
+
+        .book-item:nth-child(2) {
+            background: linear-gradient(135deg, rgba(102, 252, 241, 0.1), rgba(168, 113, 248, 0.1));
+        }
+
+        .book-item:nth-child(2):hover {
+            box-shadow: 6px 6px 0 var(--color-accent2);
+        }
+
+        .book-item:nth-child(3) {
+            background: linear-gradient(135deg, rgba(179, 255, 90, 0.1), rgba(168, 113, 248, 0.1));
+        }
+
+        .book-item:nth-child(3):hover {
+            box-shadow: 6px 6px 0 var(--color-accent4);
+        }
+
+        .book-item-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--color-dark);
+            flex: 1;
+            line-height: 1.4;
+        }
+
+        .book-item-arrow {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--color-accent1);
+            flex-shrink: 0;
+        }
+
+        .book-item-original {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--color-accent3);
+            flex-shrink: 0;
+        }
+
+        .book-list-notice {
+            margin-top: 25px;
+            padding: 18px;
+            background: rgba(179, 255, 90, 0.2);
+            border: 3px solid var(--color-dark);
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--color-dark);
+            text-align: center;
+            line-height: 1.6;
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.8);
+        }
+
+        @media (max-width: 480px) {
+            .book-list-modal {
+                width: 95vw;
+            }
+
+            .book-list-header h2 {
+                font-size: 18px;
+            }
+
+            .book-list-content {
+                padding: 20px 15px;
+            }
+
+            .book-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .book-item-arrow {
+                display: none;
+            }
+
+            .book-item-title,
+            .book-item-original {
+                font-size: 14px;
+            }
+
+            .book-list-notice {
+                font-size: 13px;
+                padding: 15px;
+            }
         }
 
         .formula-highlight { background-color: var(--color-accent4); padding: 5px; border: 2px solid var(--color-dark); display: inline-block; margin: 5px 0; font-weight: bold; }
@@ -415,8 +692,8 @@
         /* 目录按钮 */
         .menu-button {
             position: fixed;
-            top: 30px;
-            left: 30px;
+            top: calc(30px + var(--safe-area-top));
+            left: calc(30px + var(--safe-area-left));
             width: 50px;
             height: 50px;
             background: linear-gradient(135deg, var(--color-accent1), var(--color-accent3));
@@ -438,8 +715,8 @@
 
         @media (max-width: 480px) {
             .menu-button {
-                top: 20px;
-                left: 20px;
+                top: calc(20px + var(--safe-area-top));
+                left: calc(20px + var(--safe-area-left));
                 width: 45px;
                 height: 45px;
             }
@@ -460,13 +737,15 @@
             top: 0;
             left: 0;
             width: 100vw;
-            height: 100vh;
+            height: var(--full-height);
+            min-height: var(--full-height);
             background: rgba(0, 0, 0, 0.7);
             z-index: 2000;
             display: none;
             align-items: center;
             justify-content: center;
             backdrop-filter: blur(5px);
+            padding: calc(var(--safe-area-top) + 20px) calc(var(--safe-area-right) + 20px) calc(var(--safe-area-bottom) + 20px) calc(var(--safe-area-left) + 20px);
         }
 
         .menu-overlay.active {
@@ -621,29 +900,38 @@
         }
         @media (max-width: 480px) {
             .cover-image {
-                width: min(240px, 85vw);
+                width: min(240px, 82vw);
                 margin-bottom: 20px;
             }
             .slide-intro h1 { font-size: 26px; }
             /* 调整移动端布局，使其从顶部开始排列，避免内容过长时被居中挤压 */
             .slide {
                 justify-content: flex-start;
-                padding-top: 100px;
+                padding-top: calc(100px + var(--safe-area-top));
+                padding-bottom: calc(70px + var(--safe-area-bottom));
             }
             .slide-intro, .slide-outro {
                 justify-content: center; /* 封面和封底保持居中 */
             }
             /* 移动端卡片优化 */
             .book-card {
-                width: min(280px, 85vw);
-                min-width: min(280px, 85vw);
-                border-radius: 16px;
+                width: 65vw;
+                min-width: 65vw;
+                border-radius: 20px;
             }
             .book-cover {
-                height: min(280px, 85vw);
+                height: 65vw;
             }
             .book-title { font-size: 16px; }
             .book-description { font-size: 13px; }
+            .progress-container {
+                left: calc(12px + var(--safe-area-left));
+                right: calc(12px + var(--safe-area-right));
+            }
+            #shelfView .swipe-indicator {
+                font-size: 12px;
+                bottom: calc(25px + var(--safe-area-bottom));
+            }
         }
     </style>
 </head>
@@ -653,11 +941,38 @@
         您的浏览器不支持音频播放。
     </audio>
 
-    <div class="music-control" id="musicControl" title="点击播放/暂停音乐">
-        <span class="music-icon" id="musicIcon">🎵</span>
+    <div class="book-list-button" id="bookListButton" title="背后隐藏书单">
+        <span class="book-list-icon">📚</span>
     </div>
-    <div class="volume-slider">
-        <input type="range" id="volumeControl" min="0" max="100" value="30" title="音量控制">
+
+    <!-- 书单弹窗 -->
+    <div class="book-list-overlay" id="bookListOverlay">
+        <div class="book-list-modal">
+            <div class="book-list-header">
+                <h2>📚 背后隐藏书单</h2>
+                <div class="book-list-close" id="bookListClose">✕</div>
+            </div>
+            <div class="book-list-content">
+                <div class="book-item">
+                    <div class="book-item-title">《重生之文科女制霸AI产品赛道》</div>
+                    <div class="book-item-arrow">→</div>
+                    <div class="book-item-original">《学会提问》</div>
+                </div>
+                <div class="book-item">
+                    <div class="book-item-title">《我患上了网感双向障碍》</div>
+                    <div class="book-item-arrow">→</div>
+                    <div class="book-item-original">《网感》</div>
+                </div>
+                <div class="book-item">
+                    <div class="book-item-title">《嬛嬛其实是一个产品经理》</div>
+                    <div class="book-item-arrow">→</div>
+                    <div class="book-item-original">《高效能人士的七个习惯》</div>
+                </div>
+                <div class="book-list-notice">
+                    💡 作者写书不易，鼓励大家购买正版图书阅读。
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- 目录按钮 -->
@@ -957,8 +1272,8 @@
 
     <div id="shelfView">
         <header class="shelf-header">
-            <h1>产品梦剧场</h1>
-            <p class="pixel-font">SELECT A STORY</p>
+            <h1>NovelPM</h1>
+            <p class="shelf-tagline">原来室友每天凌晨看的不是网文是 <span class="highlight-text">AI 产品课程</span></p>
         </header>
         <div class="carousel-container">
             <div class="carousel-arrow left" id="carouselPrev">‹</div>
@@ -967,10 +1282,10 @@
             <div class="carousel-wrapper" id="carouselWrapper">
                 <div class="book-card" data-book-id="book-1" onclick="loadBook(this)">
                     <div class="book-cover">
-                        <img src="https://youke1.picui.cn/s1/2025/09/30/68db77273d2c1.png" alt="重生我在张江做 AI 产品">
+                        <img src="https://youke1.picui.cn/s1/2025/09/30/68db77273d2c1.png" alt="重生文科女制霸AI产品赛道">
                     </div>
                     <div class="book-info">
-                        <div class="book-title">重生我在张江做 AI 产品</div>
+                        <div class="book-title">重生文科女制霸AI产品赛道</div>
                         <div class="book-description">我，文科生，想做产品女王</div>
                     </div>
                 </div>
@@ -980,8 +1295,8 @@
                         <img src="https://youke1.picui.cn/s1/2025/09/30/68db9968a6d0d.png" alt="网感">
                     </div>
                     <div class="book-info">
-                        <div class="book-title">《网感》</div>
-                        <div class="book-description">网感是什么，一种感觉</div>
+                        <div class="book-title">我患上了网感双向障碍</div>
+                        <div class="book-description">网感是什么，真的是一种感觉吗？</div>
                     </div>
                 </div>
 
@@ -991,7 +1306,7 @@
                     </div>
                     <div class="book-info">
                         <div class="book-title">嬛嬛其实是一个产品经理</div>
-                        <div class="book-description">我，甄嬛，在职场后宫步步为营，关于职场生存的7个高效习惯</div>
+                        <div class="book-description">职场和后宫相比，太简单了，包赢的</div>
                     </div>
                 </div>
             </div>
@@ -1002,7 +1317,6 @@
                 <div class="carousel-dot" data-index="2"></div>
             </div>
         </div>
-        <div class="swipe-indicator vertical-swipe" style="color: var(--color-dark);">点击卡片开始学习 · 左右切换查看更多</div>
     </div>
 
     <div id="detailView">
@@ -1022,7 +1336,7 @@
                 <div class="cover-image">
                    <span class="cover-image-emoji">🎭</span>
                 </div>
-                <h1>重生我在张江做 AI 产品</h1>
+                <h1>重生文科女制霸AI产品赛道</h1>
                 <p class="pixel-font" style="margin-bottom: 20px; color: var(--color-light); text-shadow: 2px 2px 0 var(--color-dark);">产品梦剧场</p>
 
                 <div class="retro-window">
@@ -3122,38 +3436,33 @@
         // Initialize
         updateProgress();
 
-        // --- 音乐控制逻辑 (Retained from template) ---
-        const bgMusic = document.getElementById('bgMusic');
-        const musicControl = document.getElementById('musicControl');
-        const musicIcon = document.getElementById('musicIcon');
-        const volumeControl = document.getElementById('volumeControl');
-        let isPlaying = false;
+        // --- 书单弹窗逻辑 ---
+        const bookListButton = document.getElementById('bookListButton');
+        const bookListOverlay = document.getElementById('bookListOverlay');
+        const bookListClose = document.getElementById('bookListClose');
 
-        // 设置初始音量
-        bgMusic.volume = 0.3;
+        // 打开书单弹窗
+        bookListButton.addEventListener('click', () => {
+            bookListOverlay.classList.add('active');
+        });
 
-        // 音乐播放/暂停控制
-        musicControl.addEventListener('click', () => {
-            if (isPlaying) {
-                bgMusic.pause();
-                musicControl.classList.remove('playing');
-                musicIcon.textContent = '🎵';
-                isPlaying = false;
-            } else {
-                // 首次点击时尝试播放
-                bgMusic.play().then(() => {
-                    musicControl.classList.add('playing');
-                    musicIcon.textContent = '🎶';
-                    isPlaying = true;
-                }).catch(err => {
-                    // console.log('自动播放被阻止，需要用户手动点击播放', err);
-                });
+        // 关闭书单弹窗
+        bookListClose.addEventListener('click', () => {
+            bookListOverlay.classList.remove('active');
+        });
+
+        // 点击遮罩关闭
+        bookListOverlay.addEventListener('click', (e) => {
+            if (e.target === bookListOverlay) {
+                bookListOverlay.classList.remove('active');
             }
         });
 
-        // 音量控制
-        volumeControl.addEventListener('input', (e) => {
-            bgMusic.volume = e.target.value / 100;
+        // ESC键关闭
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && bookListOverlay.classList.contains('active')) {
+                bookListOverlay.classList.remove('active');
+            }
         });
 
         // --- 目录功能 ---
